@@ -158,3 +158,9 @@ Test-Automáticos, Code coverage > 80%.
 1. Código Fuente (Para Nivel 2 y 3: En repositorio github).
 2. Instrucciones de cómo ejecutar el programa o la API. (Para Nivel 2 y 3: En README de github).
 3. URL de la API (Nivel 2 y 3).
+
+# Ejecutar
+
+```shell
+go run cmd/main.go
+```
