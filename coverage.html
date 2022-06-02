@@ -1,0 +1,398 @@
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>mutant: Go Coverage Report</title>
+		<style>
+			body {
+				background: black;
+				color: rgb(80, 80, 80);
+			}
+			body, pre, #legend span {
+				font-family: Menlo, monospace;
+				font-weight: bold;
+			}
+			#topbar {
+				background: black;
+				position: fixed;
+				top: 0; left: 0; right: 0;
+				height: 42px;
+				border-bottom: 1px solid rgb(80, 80, 80);
+			}
+			#content {
+				margin-top: 50px;
+			}
+			#nav, #legend {
+				float: left;
+				margin-left: 10px;
+			}
+			#legend {
+				margin-top: 12px;
+			}
+			#nav {
+				margin-top: 10px;
+			}
+			#legend span {
+				margin: 0 5px;
+			}
+			.cov0 { color: rgb(192, 0, 0) }
+.cov1 { color: rgb(128, 128, 128) }
+.cov2 { color: rgb(116, 140, 131) }
+.cov3 { color: rgb(104, 152, 134) }
+.cov4 { color: rgb(92, 164, 137) }
+.cov5 { color: rgb(80, 176, 140) }
+.cov6 { color: rgb(68, 188, 143) }
+.cov7 { color: rgb(56, 200, 146) }
+.cov8 { color: rgb(44, 212, 149) }
+.cov9 { color: rgb(32, 224, 152) }
+.cov10 { color: rgb(20, 236, 155) }
+
+		</style>
+	</head>
+	<body>
+		<div id="topbar">
+			<div id="nav">
+				<select id="files">
+				
+				<option value="file0">github.com/llulioscesar/mercadolibre-x-men/internal/mutant/dna.go (96.8%)</option>
+				
+				<option value="file1">github.com/llulioscesar/mercadolibre-x-men/internal/mutant/http.go (63.0%)</option>
+				
+				<option value="file2">github.com/llulioscesar/mercadolibre-x-men/internal/mutant/person.go (95.2%)</option>
+				
+				<option value="file3">github.com/llulioscesar/mercadolibre-x-men/internal/mutant/postgres.go (62.5%)</option>
+				
+				</select>
+			</div>
+			<div id="legend">
+				<span>not tracked</span>
+			
+				<span class="cov0">not covered</span>
+				<span class="cov8">covered</span>
+			
+			</div>
+		</div>
+		<div id="content">
+		
+		<pre class="file" id="file0" style="display: none">package mutant
+
+import (
+        "errors"
+        "regexp"
+        "strings"
+)
+
+type DNAStructure struct {
+        Nucleotides []string
+}
+
+func (dna *DNAStructure) CheckMatrix() error <span class="cov8" title="1">{
+        adnSize := len(dna.Nucleotides)
+        re := regexp.MustCompile(`(?s)[ACGT]+`)
+
+        for _, sequence := range dna.Nucleotides </span><span class="cov8" title="1">{
+                if len(sequence) != adnSize </span><span class="cov8" title="1">{
+                        return errors.New("Invalid Matrix size")
+                }</span>
+                <span class="cov8" title="1">if re.FindString(sequence) != sequence </span><span class="cov0" title="0">{
+                        return errors.New("Invalid DNAStructure sequence")
+                }</span>
+        }
+        <span class="cov8" title="1">return nil</span>
+}
+
+func (dna *DNAStructure) getRightDiagonal(nucleotides []string) (result []string) <span class="cov8" title="1">{
+        var all [][]string
+        for s := 0; s &lt; len(nucleotides); s++ </span><span class="cov8" title="1">{
+                var temp []string
+                for y, x := s, 0; y &gt;= 0; y, x = y-1, x+1 </span><span class="cov8" title="1">{
+                        temp = append(temp, string([]rune(nucleotides[y])[x]))
+                }</span>
+                <span class="cov8" title="1">all = append(all, temp)</span>
+        }
+        <span class="cov8" title="1">for s := 1; s &lt; len(nucleotides[0]); s++ </span><span class="cov8" title="1">{
+                var temp []string
+                for y, x := len(nucleotides)-1, s; x &lt; len(nucleotides[0]); y, x = y-1, x+1 </span><span class="cov8" title="1">{
+                        temp = append(temp, string([]rune(nucleotides[y])[x]))
+                }</span>
+                <span class="cov8" title="1">all = append(all, temp)</span>
+        }
+        <span class="cov8" title="1">for _, sequence := range all </span><span class="cov8" title="1">{
+                result = append(result, strings.Join(sequence, ""))
+        }</span>
+        <span class="cov8" title="1">return result</span>
+}
+
+func (dna *DNAStructure) GetRightDiagonal() []string <span class="cov8" title="1">{
+        return dna.getRightDiagonal(dna.Nucleotides)
+}</span>
+
+func (dna *DNAStructure) GetLeftDiagonal() []string <span class="cov8" title="1">{
+        reverse := dna.reverseMatix(dna.Nucleotides)
+        return dna.getRightDiagonal(reverse)
+}</span>
+
+func (dna *DNAStructure) reverseMatix(nucleotides []string) (result []string) <span class="cov8" title="1">{
+        for _, v := range nucleotides </span><span class="cov8" title="1">{
+                result = append(result, dna.reverseSting(v))
+        }</span>
+        <span class="cov8" title="1">return</span>
+}
+
+func (dna *DNAStructure) reverseSting(sequence string) (result string) <span class="cov8" title="1">{
+        for _, v := range sequence </span><span class="cov8" title="1">{
+                result = string(v) + result
+        }</span>
+        <span class="cov8" title="1">return</span>
+}
+</pre>
+		
+		<pre class="file" id="file1" style="display: none">package mutant
+
+import (
+        "context"
+        "encoding/json"
+        "github.com/gofiber/fiber/v2"
+)
+
+type (
+        HttpServer struct {
+                Router  *fiber.App
+                DB      Database
+                Context context.Context
+        }
+
+        DNAPostDto struct {
+                DNA []string `json:"dna"`
+        }
+        DNAResponseDto struct {
+                IsMutant bool `json:"is_mutant"`
+        }
+        StatsResponseDto struct {
+                Human  float64 `json:"count_human_dna"`
+                Mutant float64 `json:"count_mutant_dna"`
+                Ratio  float64 `json:"ratio"`
+        }
+)
+
+func NewMutantRouter(ctx context.Context, app *fiber.App, db Database) <span class="cov0" title="0">{
+
+        err := db.Prepare(ctx)
+        if err != nil </span><span class="cov0" title="0">{
+                panic(err)</span>
+        }
+
+        <span class="cov0" title="0">http := HttpServer{
+                Router:  app,
+                DB:      db,
+                Context: ctx,
+        }
+
+        app.Post("/mutant", http.IsMutant)
+        app.Get("/stats", http.Stats)</span>
+}
+
+func (h HttpServer) Stats(c *fiber.Ctx) error <span class="cov8" title="1">{
+        var result StatsResponseDto
+        raw, err := h.DB.GetStats(h.Context)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">err = json.Unmarshal([]byte(raw), &amp;result)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">return c.JSON(result)</span>
+}
+
+func (h HttpServer) IsMutant(c *fiber.Ctx) error <span class="cov8" title="1">{
+        dto := new(DNAPostDto)
+
+        if err := c.BodyParser(dto); err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">p := Person{DNA: DNAStructure{Nucleotides: dto.DNA}}
+        isMutant := p.IsMutant()
+
+        b, err := json.Marshal(&amp;dto)
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+
+        <span class="cov8" title="1">err = h.DB.InsertDNA(h.Context, string(b), isMutant)
+        if err != nil </span>{<span class="cov0" title="0">
+
+        }</span>
+
+        <span class="cov8" title="1">if !isMutant </span><span class="cov8" title="1">{
+                return c.Status(fiber.StatusForbidden).JSON(DNAResponseDto{IsMutant: false})
+        }</span>
+
+        <span class="cov8" title="1">return c.JSON(DNAResponseDto{IsMutant: true})</span>
+}
+</pre>
+		
+		<pre class="file" id="file2" style="display: none">package mutant
+
+import (
+        "regexp"
+)
+
+type Person struct {
+        DNA DNAStructure
+}
+
+func (person *Person) IsMutant() bool <span class="cov8" title="1">{
+        err := person.DNA.CheckMatrix()
+        if err != nil </span><span class="cov8" title="1">{
+                return false
+        }</span>
+        <span class="cov8" title="1">return person.findMutantBlocks()</span>
+}
+
+func (person *Person) findMutantBlocks() bool <span class="cov8" title="1">{
+        var result []string
+
+        re := regexp.MustCompile(`A{4,}|C{4,}|G{4,}|T{4,}`)
+        for _, sequence := range person.DNA.Nucleotides </span><span class="cov8" title="1">{
+                test := re.FindString(sequence)
+                if len(test) &gt; 0 </span><span class="cov8" title="1">{
+                        result = append(result, test)
+                }</span>
+        }
+
+        <span class="cov8" title="1">right := person.DNA.GetRightDiagonal()
+        for _, sequence := range right </span><span class="cov8" title="1">{
+                test := re.FindString(sequence)
+                if len(test) &gt; 0 </span><span class="cov0" title="0">{
+                        result = append(result, test)
+                }</span>
+        }
+
+        <span class="cov8" title="1">left := person.DNA.GetLeftDiagonal()
+        for _, sequence := range left </span><span class="cov8" title="1">{
+                test := re.FindString(sequence)
+                if len(test) &gt; 0 </span><span class="cov8" title="1">{
+                        result = append(result, test)
+                }</span>
+        }
+        <span class="cov8" title="1">return len(result) &gt; 1</span>
+}
+</pre>
+		
+		<pre class="file" id="file3" style="display: none">package mutant
+
+import (
+        "context"
+        "fmt"
+        "github.com/jackc/pgconn"
+        "github.com/jackc/pgx/v4"
+        "os"
+)
+
+type PgxIface interface {
+        Begin(context.Context) (pgx.Tx, error)
+        Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
+        QueryRow(context.Context, string, ...interface{}) pgx.Row
+        Query(context.Context, string, ...interface{}) (pgx.Rows, error)
+        Ping(context.Context) error
+        Prepare(context.Context, string, string) (*pgconn.StatementDescription, error)
+        Close(context.Context) error
+}
+
+type Database struct {
+        DB PgxIface
+}
+
+func CreateDB(ctx context.Context) Database <span class="cov0" title="0">{
+        conn, err := pgx.Connect(ctx, os.Getenv("DATABASE_URL"))
+        if err != nil </span><span class="cov0" title="0">{
+                fmt.Fprintf(os.Stderr, "Unable to connect to database: %v\n", err)
+                os.Exit(1)
+        }</span>
+        <span class="cov0" title="0">return Database{
+                DB: conn,
+        }</span>
+}
+
+func (d *Database) Prepare(ctx context.Context) error <span class="cov8" title="1">{
+        _, err := d.DB.Exec(ctx, `CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
+
+        _, err = d.DB.Exec(ctx, `CREATE TABLE IF NOT EXISTS dna(
+                id uuid DEFAULT uuid_generate_v4(),
+                nucleotides JSONB UNIQUE NOT NULL,
+                is_mutant BOOLEAN NOT NULL,
+                PRIMARY KEY (id)
+    )`)
+
+        _, err = d.DB.Exec(ctx, `CREATE OR REPLACE FUNCTION f_stats()
+    RETURNS TABLE
+            (
+                j JSON
+            )
+    LANGUAGE plpgsql
+AS
+$$
+BEGIN
+    RETURN QUERY SELECT json_build_object('count_mutant_dna',
+                                          COUNT(CASE WHEN is_mutant = TRUE THEN is_mutant END),
+                                          'count_human_dna',
+                                          COUNT(CASE WHEN is_mutant = FALSE THEN is_mutant END),
+                                          'ratio', COUNT(CASE WHEN is_mutant = TRUE THEN is_mutant END) * 1.0 /
+                                                   COUNT(CASE WHEN is_mutant = FALSE THEN is_mutant END)) j
+                 FROM dna;
+END;
+
+$$`)
+
+        return err
+}</span>
+
+func (d *Database) InsertDNA(ctx context.Context, dna string, isMutant bool) error <span class="cov8" title="1">{
+        _, err := d.DB.Prepare(ctx, "insert_dna", "INSERT INTO dna(nucleotides, is_mutant) VALUES ($1::JSONB, $2)")
+        if err != nil </span><span class="cov0" title="0">{
+                return err
+        }</span>
+        <span class="cov8" title="1">_, err = d.DB.Exec(ctx, "insert_dna", dna, isMutant)
+        return err</span>
+}
+
+func (d *Database) GetStats(ctx context.Context) (result string, err error) <span class="cov8" title="1">{
+        err = d.DB.QueryRow(ctx, `SELECT * FROM f_stats()`).Scan(&amp;result)
+        return result, err
+}</span>
+</pre>
+		
+		</div>
+	</body>
+	<script>
+	(function() {
+		var files = document.getElementById('files');
+		var visible;
+		files.addEventListener('change', onChange, false);
+		function select(part) {
+			if (visible)
+				visible.style.display = 'none';
+			visible = document.getElementById(part);
+			if (!visible)
+				return;
+			files.value = part;
+			visible.style.display = 'block';
+			location.hash = part;
+		}
+		function onChange() {
+			select(files.value);
+			window.scrollTo(0, 0);
+		}
+		if (location.hash != "") {
+			select(location.hash.substr(1));
+		}
+		if (!visible) {
+			select("file0");
+		}
+	})();
+	</script>
+</html>

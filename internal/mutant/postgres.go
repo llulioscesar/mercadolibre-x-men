@@ -3,12 +3,23 @@ package mutant
 import (
 	"context"
 	"fmt"
+	"github.com/jackc/pgconn"
 	"github.com/jackc/pgx/v4"
 	"os"
 )
 
+type PgxIface interface {
+	Begin(context.Context) (pgx.Tx, error)
+	Exec(context.Context, string, ...interface{}) (pgconn.CommandTag, error)
+	QueryRow(context.Context, string, ...interface{}) pgx.Row
+	Query(context.Context, string, ...interface{}) (pgx.Rows, error)
+	Ping(context.Context) error
+	Prepare(context.Context, string, string) (*pgconn.StatementDescription, error)
+	Close(context.Context) error
+}
+
 type Database struct {
-	DB *pgx.Conn
+	DB PgxIface
 }
 
 func CreateDB(ctx context.Context) Database {
@@ -23,14 +34,14 @@ func CreateDB(ctx context.Context) Database {
 }
 
 func (d *Database) Prepare(ctx context.Context) error {
-	_, err := d.DB.Exec(ctx, `CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`)
+	_, err := d.DB.Exec(ctx, `CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`)
 
 	_, err = d.DB.Exec(ctx, `CREATE TABLE IF NOT EXISTS dna(
 		id uuid DEFAULT uuid_generate_v4(),
 		nucleotides JSONB UNIQUE NOT NULL,
 		is_mutant BOOLEAN NOT NULL,
 		PRIMARY KEY (id)
-    );`)
+    )`)
 
 	_, err = d.DB.Exec(ctx, `CREATE OR REPLACE FUNCTION f_stats()
     RETURNS TABLE
@@ -50,17 +61,21 @@ BEGIN
                  FROM dna;
 END;
 
-$$;`)
+$$`)
 
 	return err
 }
 
 func (d *Database) InsertDNA(ctx context.Context, dna string, isMutant bool) error {
-	_, err := d.DB.Exec(ctx, `INSERT INTO dna(nucleotides, is_mutant) VALUES ($1::JSONB, $2);`, dna, isMutant)
+	_, err := d.DB.Prepare(ctx, "insert_dna", "INSERT INTO dna(nucleotides, is_mutant) VALUES ($1::JSONB, $2)")
+	if err != nil {
+		return err
+	}
+	_, err = d.DB.Exec(ctx, "insert_dna", dna, isMutant)
 	return err
 }
 
 func (d *Database) GetStats(ctx context.Context) (result string, err error) {
-	err = d.DB.QueryRow(ctx, `SELECT * FROM f_stats();`).Scan(&result)
+	err = d.DB.QueryRow(ctx, `SELECT * FROM f_stats()`).Scan(&result)
 	return result, err
 }
