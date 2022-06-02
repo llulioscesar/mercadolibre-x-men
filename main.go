@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
@@ -8,9 +9,12 @@ import (
 	"github.com/gofiber/fiber/v2/middleware/requestid"
 	"github.com/llulioscesar/mercadolibre-x-men/internal/mutant"
 	"log"
+	"os"
 )
 
 func main() {
+	ctx := context.Background()
+
 	apiRouter := fiber.New()
 	apiRouter.Use(requestid.New())
 	apiRouter.Use(logger.New(logger.Config{
@@ -28,11 +32,15 @@ func main() {
 	}))
 	apiRouter.Use(recover.New())
 
-	mutant.NewMutantRouter(apiRouter)
+	db := mutant.CreateDB(ctx)
+
+	defer db.DB.Close(ctx)
+
+	mutant.NewMutantRouter(ctx, apiRouter, db)
 
 	log.Println("Starting HTTP server")
 
-	err := apiRouter.Listen(":8000")
+	err := apiRouter.Listen(":" + os.Getenv("PORT"))
 	if err != nil {
 		panic("Unable to start HTTP server")
 	}

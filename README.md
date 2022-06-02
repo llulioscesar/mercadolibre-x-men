@@ -1,5 +1,11 @@
 # Examen Mercadolibre
 
+## Ejecutar
+
+```shell
+go run cmd/main.go
+```
+
 Magneto quiere reclutar la mayor cantidad de mutantes para poder luchar contra los X-Men.
 
 Te ha contratado a ti para que desarrolles un proyecto que detecte si un humano es mutante basándose en su secuencia de
@@ -158,9 +164,3 @@ Test-Automáticos, Code coverage > 80%.
 1. Código Fuente (Para Nivel 2 y 3: En repositorio github).
 2. Instrucciones de cómo ejecutar el programa o la API. (Para Nivel 2 y 3: En README de github).
 3. URL de la API (Nivel 2 y 3).
-
-# Ejecutar
-
-```shell
-go run cmd/main.go
-```
