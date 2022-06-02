@@ -1,4 +1,4 @@
-package main
+package internal
 
 import (
 	"errors"
@@ -6,11 +6,11 @@ import (
 	"strings"
 )
 
-type DNA struct {
+type DNAStructure struct {
 	Nucleotides []string
 }
 
-func (dna *DNA) CheckMatrix() error {
+func (dna *DNAStructure) CheckMatrix() error {
 	adnSize := len(dna.Nucleotides)
 	re := regexp.MustCompile(`(?s)[ACGT]+`)
 
@@ -19,13 +19,13 @@ func (dna *DNA) CheckMatrix() error {
 			return errors.New("Invalid Matrix size")
 		}
 		if re.FindString(sequence) != sequence {
-			return errors.New("Invalid DNA sequence")
+			return errors.New("Invalid DNAStructure sequence")
 		}
 	}
 	return nil
 }
 
-func (dna *DNA) GetRightDiagonal(nucleotides []string) (result []string) {
+func (dna *DNAStructure) getRightDiagonal(nucleotides []string) (result []string) {
 	var all [][]string
 	for s := 0; s < len(nucleotides); s++ {
 		var temp []string
@@ -47,19 +47,23 @@ func (dna *DNA) GetRightDiagonal(nucleotides []string) (result []string) {
 	return result
 }
 
-func (dna *DNA) GetLeftDiagonal(nucleotides []string) []string {
-	reverse := dna.reverseMatix(nucleotides)
-	return dna.GetRightDiagonal(reverse)
+func (dna *DNAStructure) GetRightDiagonal() []string {
+	return dna.getRightDiagonal(dna.Nucleotides)
 }
 
-func (dna *DNA) reverseMatix(nucleotides []string) (result []string) {
+func (dna *DNAStructure) GetLeftDiagonal() []string {
+	reverse := dna.reverseMatix(dna.Nucleotides)
+	return dna.getRightDiagonal(reverse)
+}
+
+func (dna *DNAStructure) reverseMatix(nucleotides []string) (result []string) {
 	for _, v := range nucleotides {
 		result = append(result, dna.reverseSting(v))
 	}
 	return
 }
 
-func (dna *DNA) reverseSting(sequence string) (result string) {
+func (dna *DNAStructure) reverseSting(sequence string) (result string) {
 	for _, v := range sequence {
 		result = string(v) + result
 	}

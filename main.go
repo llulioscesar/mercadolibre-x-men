@@ -2,20 +2,46 @@ package main
 
 import (
 	"log"
+	"prueba/internal"
 )
 
 func main() {
-	adn1 := []string{"ATGCGA", "CAGTGC", "TTATTT", "AGACGG", "GCGTCA", "TCACTG"}
-	adn2 := []string{"ATGCGA", "CAGTGC", "TTATGT", "AGAAGG", "CCCCTA", "TCACTG"}
-	err := checkMatrix(adn1)
-	if err != nil {
-		log.Fatal(err.Error())
+	p1 := internal.Person{
+		DNA: internal.DNAStructure{
+			Nucleotides: []string{
+				"ATGCGA",
+				"CAGTGC",
+				"TTATGT",
+				"AGAAGG",
+				"CCCCTA",
+				"TCACTG"},
+		},
 	}
-	log.Println(isMutant(adn1))
-
-	err = checkMatrix(adn2)
-	if err != nil {
-		log.Fatal(err.Error())
+	p2 := internal.Person{
+		DNA: internal.DNAStructure{
+			Nucleotides: []string{
+				"AAAAGA",
+				"CAGTGC",
+				"TTATGT",
+				"AGAAGG",
+				"CCCCAA",
+				"TCACTG"},
+		},
 	}
-	log.Println(isMutant(adn2))
+	p3 := internal.Person{
+		DNA: internal.DNAStructure{
+			Nucleotides: []string{
+				"ATGCGA",
+				"ATCGTA",
+				"AGCGTA",
+				"ATGCGA",
+				"CCACAA",
+				"CACACA"},
+		},
+	}
+	log.Println(p1.IsMutant())
+	log.Println("-----")
+	log.Println(p2.IsMutant())
+	log.Println("-----")
+	log.Println(p3.IsMutant())
 }
