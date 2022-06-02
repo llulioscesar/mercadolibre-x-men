@@ -14,6 +14,19 @@ post http://localhost:8000/mutant
 get http://localhost:8000/stats
 ```
 
+## Coverage
+
+```shell
+go test -coverprofile=coverage.out ./...
+?       github.com/llulioscesar/mercadolibre-x-men      [no test files]
+ok      github.com/llulioscesar/mercadolibre-x-men/internal/mutant      0.524s  coverage: 81.1% of statements
+
+```
+
+```shell
+go tool cover -html=coverage.out
+```
+
 ## Prueba
 
 Magneto quiere reclutar la mayor cantidad de mutantes para poder luchar contra los X-Men.
