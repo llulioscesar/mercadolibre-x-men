@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  go:
+    restart: "no"
+    container_name: mutant-api
+    build:
+      context: ./
+      target: DEV
+      dockerfile: build/api/Dockerfile
+    environment:
+      PORT: "80"
+      DATABASE_URL: "postgresql://postgres:postgres@postgres:5432/mutant"
+    volumes:
+      - ./:/go/src/github.com/llulioscesar/mercadolibre-x-men
+    ports:
+      - '8000:80'
+    depends_on:
+      - postgres
+    #env_file:
+    #  - ./build/.env
+  postgres:
+    restart: "no"
+    image: postgres:alpine
+    container_name: mutant-postgres
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      LANG: "es_CO.utf8"
+      TZ: "America/Bogota"
+    ports:
+      - '1478:5432'
+    volumes:
+      - mutant_databases:/var/lib/postgresql/data
+volumes:
+  mutant_api:
+  mutant_databases:
+networks:
+  default:
