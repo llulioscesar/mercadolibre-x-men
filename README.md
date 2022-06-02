@@ -9,6 +9,12 @@ https://mercadolibermagneto.herokuapp.com/
 ```shell
 docker-compose up -d
 ```
+```shell
+post http://localhost:8000/mutant
+get http://localhost:8000/stats
+```
+
+## Prueba
 
 Magneto quiere reclutar la mayor cantidad de mutantes para poder luchar contra los X-Men.
 
