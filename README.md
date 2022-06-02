@@ -1,9 +1,13 @@
 # Examen Mercadolibre
 
+## URL
+
+https://mercadolibermagneto.herokuapp.com/
+
 ## Ejecutar
 
 ```shell
-go run cmd/main.go
+docker-compose up -d
 ```
 
 Magneto quiere reclutar la mayor cantidad de mutantes para poder luchar contra los X-Men.
